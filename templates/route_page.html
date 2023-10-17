@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Страница маршрута</title>
+    {% csrf_token %}
+    <a href="../">
+        <button style="width:5%;height:3%;">Назад</button>
+    </a>
+    <h1>Тут будут рекомендации</h1>
+    <p>{{ recs_1 }}</p>
+    {% for reason in reason_1 %}
+    <p>{{ reason }}</p>
+    {% endfor %}
+    <p>{{ recs_2 }}</p>
+    {% for reason in reason_2 %}
+    <p>{{ reason }}</p>
+    {% endfor %}
+    <p>{{ recs_3 }}</p>
+    {% for reason in reason_3 %}
+    <p>{{ reason }}</p>
+    {% endfor %}
+    <h1>-----------------------------------------------</h1>
+    <h2>Выберите класс обслуживания</h2>
+    {% if plac != None %}
+    <p>Плацкарт: </p>
+    {% for p in plac %}
+    {% if p.character.pet == user.trip_with_animals or p.character.pet == True %}
+    <span>{{p.character.get_class_van_display}}: {{p.character.food}} {{p.character.info_entertainment}} {{p.character.linen}}
+             {{p.character.biotoilet}} {{p.character.conditioner}} {{p.character.cosmetic}} {{p.character.press}}
+             {{p.character.pet}} {{p.character.bath}} {{p.character.business_lounge}} {{p.character.taxi}}</span>
+    <a href="./chosen/{{p.id}}">
+        <button>Выбрать</button>
+    </a>
+    <p></p>
+    {% endif %}
+    {% endfor %}
+    {% endif %}
+    {% if coupe != None %}
+    <p>Купе: </p>
+    {% for p in coupe %}
+    {% if p.character.pet == user.trip_with_animals or p.character.pet == True %}
+    <span>{{p.character.get_class_van_display}}: {{p.character.food}} {{p.character.info_entertainment}} {{p.character.linen}}
+             {{p.character.biotoilet}} {{p.character.conditioner}} {{p.character.cosmetic}} {{p.character.press}}
+             {{p.character.pet}} {{p.character.bath}} {{p.character.business_lounge}} {{p.character.taxi}}</span>
+    <a href="./chosen/{{p.id}}">
+        <button>Выбрать</button>
+    </a>
+    <p></p>
+    {% endif %}
+    {% endfor %}
+    {% endif %}
+    {% if sv != None %}
+    <p>СВ: </p>
+    {% for p in sv %}
+    {% if p.character.pet == user.trip_with_animals or p.character.pet == True %}
+    <span>{{p.character.get_class_van_display}}: {{p.character.food}} {{p.character.info_entertainment}} {{p.character.linen}}
+             {{p.character.biotoilet}} {{p.character.conditioner}} {{p.character.cosmetic}} {{p.character.press}}
+             {{p.character.pet}} {{p.character.bath}} {{p.character.business_lounge}} {{p.character.taxi}}</span>
+    <a href="./chosen/{{p.id}}">
+        <button>Выбрать</button>
+    </a>
+    <p></p>
+    {% endif %}
+    {% endfor %}
+    {% endif %}
+    {% if lux != None %}
+    <p>Люкс: </p>
+    {% for p in lux %}
+    {% if p.character.pet == user.trip_with_animals or p.character.pet == True %}
+    <span>{{p.character.get_class_van_display}}: {{p.character.food}} {{p.character.info_entertainment}} {{p.character.linen}}
+             {{p.character.biotoilet}} {{p.character.conditioner}} {{p.character.cosmetic}} {{p.character.press}}
+             {{p.character.pet}} {{p.character.bath}} {{p.character.business_lounge}} {{p.character.taxi}}</span>
+    <a href="./chosen/{{p.id}}">
+        <button>Выбрать</button>
+    </a>
+    <p></p>
+    {% endif %}
+    {% endfor %}
+    {% endif %}
+</head>
+<body>
+
+</body>
+</html>

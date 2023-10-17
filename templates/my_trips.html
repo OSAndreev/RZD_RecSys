@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+{% csrf_token %}
+<head>
+    <meta charset="UTF-8">
+    <title>Мои поездки</title>
+    <a href="./"><button style="width:5%;height:3%;">Назад</button></a>
+    <h2>Предстоящие поездки: </h2>
+    {% if active != None %}
+        {% for p in active %}
+            <p style="display: block;">Маршрут: {{p.seats.van.train.name}}</p>
+            <p style="display: block;">Класс обслуживания: {{p.seats.van.character.get_class_van_display}}</p>
+            <p style="display: block;">Номер места: {{p.seats.seat_number}}</p>
+            <a href="./my_trips/{{p.id}}/reject"><button style="width:12%;height:2%;">Отказаться от билета</button></a>
+        {% endfor %}
+    {% else %}
+    <p>На текущий момент Вам не предстоит поездок.</p>
+    {% endif %}
+    <h2>Завершенные поездки: </h2>
+    {% if finished == None %}
+    <p>У Вас пока нет завершенных поездок.</p>
+    {% else %}
+    {% for p in finished %}
+        <p style="display: block;">Маршрут: {{p.seats.van.train.name}}</p>
+        <p style="display: block;">Класс обслуживания: {{p.seats.van.character.get_class_van_display}}</p>
+        <p style="display: block;">Номер места: {{p.seats.seat_number}}</p>
+    {% endfor %}
+    {% endif %}
+
+
+</head>
+<body>
+
+</body>
+</html>

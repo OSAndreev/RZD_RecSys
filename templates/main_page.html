@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <title>Главная страница</title>
+
+    {% csrf_token %}
+    <h1>Добро пожаловать, {{user.first_name}} {{user.patronymic}}</h1>
+    <a href="./my_trips"><button style="width:7%;height:3%;">Мои поездки</button></a>
+    <a href="../"><button style="width:10%;height:3%;">Выйти из аккаунта</button></a>
+    <form id="add_form" method="post">
+        {% csrf_token %}
+        <p>Дети в поездке: {{form.trip_with_child}} </p>
+        Еду с животным: {{form.trip_with_animals}}
+        <button form="add_form" type="submit" class="btn.btn-primary">Сохранить</button>
+    </form>
+    <h2>Выберите маршрут следования</h2>
+    {% for p in train %}
+    <div>
+    <span>{{p.place1}} - {{p.place2}} / {{p.place2}} - {{p.place1}}  </span><a href="./routes/{{p.id}}"><button>{{p.name}}</button></a>
+        </div>
+    <p></p>
+    {% endfor %}
+
+</head>
+<body>
+
+</body>
+</html>

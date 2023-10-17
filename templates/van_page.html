@@ -1,0 +1,219 @@
+{% load static %}
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Выберите место</title>
+   {% csrf_token %}
+    <style>
+        button {
+            width: 3%;
+            height: 3%;
+            display: inline-block;
+            margin-right: 4px;
+        }
+        p {
+            display: inline-block;
+        }
+        br {
+            padding: 10px;
+        }
+        .modalDialog {
+        position: fixed;
+        font-family: Arial, Helvetica, sans-serif;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background: rgba(0,0,0,0.8);
+        z-index: 99999;
+        -webkit-transition: opacity 400ms ease-in;
+        -moz-transition: opacity 400ms ease-in;
+        transition: opacity 400ms ease-in;
+        display: none;
+        pointer-events: none;
+}
+    .modalDialog:target {
+	display: block;
+	pointer-events: auto;
+}
+
+    .modalDialog > div {
+        width: 400px;
+        position: relative;
+        margin: 10% auto;
+        padding: 5px 20px 13px 20px;
+        border-radius: 10px;
+        background: #fff;
+        background: -moz-linear-gradient(#fff, #999);
+        background: -webkit-linear-gradient(#fff, #999);
+        background: -o-linear-gradient(#fff, #999);
+    }
+
+    </style>
+</head>
+<body>
+    {% for j, k, f in seat_numbers %}
+        <div id="buyModal{{j}}" class="modalDialog">
+        <div>
+            <a href="" title="Закрыть" class="close">X</a>
+            <h2>Покупка билета</h2>
+            <p style="display:block;">Класс обслуживания: {{van_ch.get_class_van_display}}</p>
+            <p style="display:block;">Место: {{j}}</p>
+            <p style="display:block;">Стоимость: {{price}} руб.</p>
+            <a href="./{{van.train.id}}/{{van.id}}/{{j}}/buy"><button style="width:25%;height:3.5%;">Купить билет</button></a>
+        </div>
+    </div>
+           <div id="PersonModal{{j}}" class="modalDialog">
+        <div>
+            <a href="" title="Закрыть" class="close">X</a>
+            {% if k == user %}
+                <h2>Это место принадлежит Вам.</h2>
+                <a href="./{{van.train.id}}/{{van.id}}/{{j}}/reject"><button style="width:40%;height:3.5%;">Отказаться от билета</button></a>
+            {% else %}
+                <h2>Попутчик</h2>
+                <p style="display:block;">{{k.last_name}} {{k.first_name}} {{k.patronymic}}</p>
+                <p style="display:block;">О себе: {{k.about}}</p>
+                {% if phone_view %}
+                    <p style="display:block;">Телефон: {{k.contact}}</p>
+                {% endif %}
+                <p style="display:block;">Отношение к курению: {{k.get_smoking_attitude_display.lower}}</p>
+                <p style="display:block;">Общительность: {{k.get_sociability_display.lower}}</p>
+                <p style="display:block;">Дети в поездке: {{f.with_children}}</p>
+                <p style="display:block;">Животные в поездке: {{f.with_animals}}</p>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+
+
+
+    <a href="../{{van.train.id}}"><button style="width:5%;height:3%;">Назад</button></a>
+    <h1>Выберите место:</h1>
+    {% if van_ch.class_van == 1 or van_ch.class_van == 2 %}
+        {% for p, k in seat_top %}
+        {% if p == 2 %}
+            <p style="line-height:0.00025">|</p>
+        {% endif %}
+        {% if k == 0 %}
+            <a href="#buyModal{{p}}"><button>{{p}}</button></a>
+        {% else %}
+            <a href="#PersonModal{{p}}"><button>{{p}}</button></a>
+        {% endif %}
+        {% if p == 4 or p == 8 or p == 12 or p == 16 or p == 20 or p == 24 or p == 28 or p == 32 or p == 36 %}
+            <p style="line-height:0.00025">|</p>
+        {% endif %}
+        {% endfor %}
+        <br>
+        {% for p, k in seat_bottom %}
+        {% if p == 1 %}
+            <p style="line-height:0.00025">|</p>
+        {% endif %}
+        {% if k == 0 %}
+            <a href="#buyModal{{p}}"><button>{{p}}</button></a>
+        {% else %}
+            <a href="#PersonModal{{p}}"><button>{{p}}</button></a>
+        {% endif %}
+        {% if p == 3 or p == 7 or p == 11 or p == 15 or p == 19 or p == 23 or p == 27 or p == 31 or p == 35 %}
+            <p>|</p>
+        {% endif %}
+        {% endfor %}
+        <br>
+        {% for p, k in seat_side %}
+        {% if p == 54 %}
+            <p style="line-height:0.00025">|</p>
+        {% endif %}
+        {% if k == 0 %}
+            <a href="#buyModal{{p}}"><button>{{p}}</button></a>
+        {% else %}
+            <a href="#PersonModal{{p}}"><button>{{p}}</button></a>
+        {% endif %}
+        {% if p == 53 or p == 51 or p == 49 or p == 47 or p == 45 or p == 43 or p == 41 or p == 39 or p == 37 %}
+            <p>|</p>
+        {% endif %}
+        {% endfor %}
+    {% endif %}
+    {% if van_ch.class_van == 3 or van_ch.class_van == 4 %}
+     {% for p, k in seat_top %}
+        {% if p == 2 %}
+            <p style="line-height:0.00025">|</p>
+        {% endif %}
+        {% if k == 0 %}
+            <a href="#buyModal{{p}}"><button>{{p}}</button></a>
+        {% else %}
+            <a href="#PersonModal{{p}}"><button>{{p}}</button></a>
+        {% endif %}
+        {% if p == 4 or p == 8 or p == 12 or p == 16 or p == 20 or p == 24 or p == 28 or p == 32 or p == 36 %}
+            <p style="line-height:0.00025">|</p>
+        {% endif %}
+        {% endfor %}
+        <br>
+        {% for p, k in seat_bottom %}
+        {% if p == 1 %}
+            <p style="line-height:0.00025">|</p>
+        {% endif %}
+        {% if k == 0 %}
+            <a href="#buyModal{{p}}"><button>{{p}}</button></a>
+        {% else %}
+            <a href="#PersonModal{{p}}"><button>{{p}}</button></a>
+        {% endif %}
+        {% if p == 3 or p == 7 or p == 11 or p == 15 or p == 19 or p == 23 or p == 27 or p == 31 or p == 35 %}
+            <p>|</p>
+        {% endif %}
+        {% endfor %}
+    {% endif %}
+    {% if van_ch.class_van == 5 or van_ch.class_van == 6 %}
+        {% for p, k in seat_bottom %}
+        {% if p == 1 %}
+            <p style="line-height:0.00025">|</p>
+        {% endif %}
+        {% if k == 0 %}
+            <a href="#buyModal{{p}}"><button>{{p}}</button></a>
+        {% else %}
+            <a href="#PersonModal{{p}}"><button>{{p}}</button></a>
+        {% endif %}
+        {% if p == 2 or p == 4 or p == 6 or p == 8 or p == 10 or p == 12 or p == 14 or p == 16 or p == 18 %}
+            <p>|</p>
+        {% endif %}
+        {% endfor %}
+    {% endif %}
+    {% if van_ch.class_van == 7 %}
+        {% for p, k in seat_top %}
+        {% if p == 2 %}
+            <p style="line-height:0.00025">|</p>
+        {% endif %}
+        {% if k == 0 %}
+            <a style="margin-right: 15" href="#buyModal{{p}}"><button>{{p}}</button></a>
+        {% else %}
+            <a style="margin-right: 15" href="#PersonModal{{p}}"><button>{{p}}</button></a>
+        {% endif %}
+
+        {% if p == 2 or p == 4 or p == 6 or p == 8 or p == 10 or p == 12 or p == 14 or p == 16 or p == 18 %}
+            <p style="line-height:0.00025">|</p>
+        {% endif %}
+        {% endfor %}
+        <br>
+        {% for p, k in seat_bottom %}
+        {% if p == 1 %}
+            <p style="line-height:0.00025">|</p>
+        {% endif %}
+        {% if k == 0 %}
+            <a style="margin-right: 15" href="#buyModal{{p}}"><button>{{p}}</button></a>
+        {% else %}
+            <a style="margin-right: 15" href="#PersonModal{{p}}"><button>{{p}}</button></a>
+        {% endif %}
+        {% if p == 1 or p == 3 or p == 5 or p == 7 or p == 9 or p == 11 or p == 13 or p == 15 or p == 17 %}
+            <p style="line-height:0.00025">|</p>
+        {% endif %}
+        {% endfor %}
+    {% endif %}
+
+    <h2>{{van_ch.get_class_van_display}}: {{van_ch.food}} {{van_ch.info_entertainment}} {{van_ch.linen}}
+             {{van_ch.biotoilet}} {{van_ch.conditioner}} {{van_ch.cosmetic}} {{van_ch.press}}
+             {{van_ch.pet}} {{van_ch.bath}} {{van_ch.business_lounge}} {{van_ch.taxi}}</h2>
+
+
+
+</body>
+</html>

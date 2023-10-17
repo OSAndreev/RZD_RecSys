@@ -1,0 +1,19 @@
+{% load static %}
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+
+</head>
+<body>
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <span>{{error}}</span>
+    <p>Нажимая кнопку "Завершить регистрацию", Вы даете согласие на обработку и использование Ваших персональных данных.</p>
+  <button class="btn btn-success" type="submit">Завершить регистрацию</button>
+</form>
+</body>
+</html>
