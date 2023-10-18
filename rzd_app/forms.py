@@ -24,21 +24,62 @@ class PassengerForm(ModelForm):
         model = Passenger
         fields = ['last_name', 'first_name', 'patronymic', 'age', 'about', 'contact', 'regular_choice',
                   'smoking_attitude', 'having_children', 'sociability', 'pets_attitude']
-        labels = {
-            "last_name": "Фамилия",
-            "first_name": "Имя",
-            "patronymic": "Отчество",
-            "age": "Возраст",
-            "about": "О себе",
-            "contact": "Телефон",
-            "regular_choice": "Чаще всего предпочитаете",
-            "smoking_attitude": "Ваше отношение к курящим попутчикам",
-            "having_children": "Планируете ли вы путешествовать с ребенком",
-            "sociability": "Оцените, насколько Вы общительны в поездке",
-            "pets_attitude": "Ваше отношение к попутчикам с домашними животными",
 
+        widgets = {
+            "last_name": TextInput(attrs={
+                'class': 'form-control form-control-lg',
+                'placeholder': 'Фамилия'
+            }),
+            "first_name": TextInput(attrs={
+                'class': 'form-control form-control-lg',
+                'placeholder': 'Имя'
+            }),
+            "patronymic": TextInput(attrs={
+                'class': 'form-control form-control-lg',
+                'placeholder': 'Отчество'
+            }),
+            "age": NumberInput(attrs={
+                'class': 'form-control form-control-lg',
+                'placeholder': 'Возраст'
+            }),
 
+            "about": TextInput(attrs={
+                'class': 'form-control form-control-lg',
+                'placeholder': 'Подробнее о вас'
+            }),
+
+            "contact": TextInput(attrs={
+                'class': 'form-control form-control-lg',
+                'placeholder': 'Контакт для связи'
+            }),
+
+            "regular_choice": Select(
+                attrs={
+                    'class': 'form-control form-control-lg',
+                }),
+
+            "smoking_attitude": Select(
+                attrs={
+                    'class': 'form-control form-control-lg',
+                }),
+
+            "having_children": Select(
+                attrs={
+                    'class': 'form-control form-control-lg',
+                }),
+
+            "sociability": Select(
+                attrs={
+                    'class': 'form-control form-control-lg',
+                }),
+
+            "pets_attitude": Select(
+                attrs={
+                    'class': 'form-control form-control-lg',
+                }),
         }
+
+
 
 class AuthUserForm(AuthenticationForm, forms.ModelForm):
     class Meta:
@@ -56,5 +97,14 @@ class ChildrenAnimalsForm(ModelForm):
             'trip_with_child': 'Детей в поездке:',
             'trip_with_animals': 'Еду с животным',
         }
+
+        widgets = {
+
+            "trip_with_child": Select(attrs={
+                'class': 'form-control form-control-sm'
+            }),
+
+        }
+
 
 

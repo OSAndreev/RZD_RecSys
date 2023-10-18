@@ -1,11 +1,125 @@
 <!DOCTYPE html>
-<html>
-<head>
-  <title>Стартовая страница</title>
-</head>
-<body>
-  <a href="/login"><button>Авторизация</button></a>
-  <a href="/register"><button>Регистрация</button></a>
+{% load static %}
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@3.4.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+    <link href="{% static 'bootstrap/css/class.css' %}" rel="stylesheet">
+    <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'bootstrap/css/headers.css' %}" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet"/>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="{% static 'bootstrap/css/styles.css' %}" rel="stylesheet">
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/inputmask/5.0.6/jquery.inputmask.min.js"></script>
+    <title>Главная</title>
+  </head>
+<body id="page-top">
+<nav class="navbar navbar-expand-lg navbar-light fixed-top shadow-sm" id="mainNav">
+    <div class="container px-5">
+        <img src="{% static 'bootstrap/img/RZD.jpg' %}" alt="Flivan" style="width: 12%; height: 12%;">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive"
+                aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            Menu
+            <i class="bi-list"></i>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ms-auto me-4 my-3 my-lg-0">
+                <li class="nav-item"><a class="nav-link me-lg-3" href="/login">Вход</a></li>
+                <li class="nav-item"><a class="nav-link me-lg-3" href="/register">Регистрация</a></li>
+            </ul>
+            <button class="btn btn-danger rounded-pill px-3 mb-2 mb-lg-0" data-bs-toggle="modalDialog"
+                    data-bs-target="#feedbackModal">
+                <span class="d-flex align-items-center">
+                    <i class="bi-chat-text-fill me-2"></i>
+                    <span class="small">Получить помощь</span>
+                </span>
+            </button>
+        </div>
+    </div>
+</nav>
+<div style="margin-top: 30px;"></div>
+    <header class="section__container header__container">
+      <h1 class="section__header">Российские<br />железные дороги</h1>
+              <img src="{% static 'bootstrap/img/header.png' %}"/>
+    </header>
 
+
+
+    <section class="section__container plan__container">
+      <p class="subheader">ПОДДЕРЖКА В ПОЕЗДКАХ</p>
+      <h2 class="section__header">Путешествуйте с комфортом</h2>
+      <p class="description">
+        Доверьте нам заботу о вашей поездке!
+      </p>
+      <div class="plan__grid">
+        <div class="plan__content">
+          <span class="number">01</span>
+          <h4>Необходимые документы</h4>
+          <p>
+            Будьте в курсе событий и подготовьтесь к своей поездке с учетом основных требований к путешествию
+          </p>
+          <span class="number">02</span>
+          <h4>Страхование в поездках</h4>
+          <p>
+            Комплексная защита для вашего спокойствия, охватывающая все потенциальные рисков во время путешествия
+          </p>
+          <span class="number">03</span>
+          <h4>Актуальное расписание</h4>
+          <p>
+            Вы всегда можете увидеть обновленное расписание движения поездов на нашем сайте и планировать свои поездки еще лучше
+          </p>
+        </div>
+        <div class="plan__image">
+            <img src="{% static 'bootstrap/img/train-1.jpg' %}"/>
+            <img src="{% static 'bootstrap/img/train-2.jpg' %}"/>
+            <img src="{% static 'bootstrap/img/train-3.jpg' %}"/>
+        </div>
+      </div>
+    </section>
+
+    <section class="memories">
+      <div class="section__container memories__container">
+        <div class="memories__header">
+          <h2 class="section__header">
+            Путешествуйте, чтобы оставить воспоминания!
+          </h2>
+        </div>
+        <div class="memories__grid">
+          <div class="memories__card">
+            <span><i class="ri-calendar-2-line"></i></span>
+            <h4>Закажите & расслабьтесь</h4>
+            <p>
+             После покупки вы можете расслабиться и предвкушать путешествие, пока мы позаботимся обо всем остальном
+            </p>
+          </div>
+          <div class="memories__card">
+            <span><i class="ri-shield-check-line"></i></span>
+            <h4>Умная регистрация</h4>
+            <p>
+              Представляем умную регистрацию на рейс - инновационное решение, революционизирующее посадку на поезд
+            </p>
+          </div>
+          <div class="memories__card">
+            <span><i class="ri-bookmark-2-line"></i></span>
+            <h4>Экономьте больше</h4>
+            <p>
+              От сниженных цен на билеты до эксклюзивных рекламных акций и спецпредложений разным категориям
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/inputmask/5.0.6/jquery.inputmask.min.js"></script>
+<script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
+<script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'bootstrap/js/scripts.js' %}"></script>
 </body>
 </html>

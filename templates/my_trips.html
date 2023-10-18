@@ -1,35 +1,88 @@
 <!DOCTYPE html>
 <html lang="en">
-{% csrf_token %}
 <head>
     <meta charset="UTF-8">
     <title>Мои поездки</title>
-    <a href="./"><button style="width:5%;height:3%;">Назад</button></a>
-    <h2>Предстоящие поездки: </h2>
-    {% if active != None %}
-        {% for p in active %}
-            <p style="display: block;">Маршрут: {{p.seats.van.train.name}}</p>
-            <p style="display: block;">Класс обслуживания: {{p.seats.van.character.get_class_van_display}}</p>
-            <p style="display: block;">Номер места: {{p.seats.seat_number}}</p>
-            <a href="./my_trips/{{p.id}}/reject"><button style="width:12%;height:2%;">Отказаться от билета</button></a>
-        {% endfor %}
-    {% else %}
-    <p>На текущий момент Вам не предстоит поездок.</p>
-    {% endif %}
-    <h2>Завершенные поездки: </h2>
-    {% if finished == None %}
-    <p>У Вас пока нет завершенных поездок.</p>
-    {% else %}
-    {% for p in finished %}
-        <p style="display: block;">Маршрут: {{p.seats.van.train.name}}</p>
-        <p style="display: block;">Класс обслуживания: {{p.seats.van.character.get_class_van_display}}</p>
-        <p style="display: block;">Номер места: {{p.seats.seat_number}}</p>
-    {% endfor %}
-    {% endif %}
-
-
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: rgb(250, 250, 250);
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            margin-top: 20px; /* Смещаем контейнер вверх */
+            margin-left: 20px; /* Добавляем отступ слева */
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start; /* Выравнивание по левому краю */
+            justify-content: center;
+        }
+        .ticket-container {
+            width: 30%; /* Уменьшаем ширину бокса с информацией о поездке */
+            margin-left: 20px; /* Добавляем отступ слева */
+        }
+        .ticket {
+            background-color: white;
+            border: 1px solid rgb(230, 0, 0);
+            padding: 15px;
+            margin: 10px;
+            border-radius: 5px;
+        }
+        h2 {
+            color: rgb(230, 0, 0);
+            margin-left: 20px; /* Добавляем отступ слева для заголовка */
+        }
+        p {
+            color: rgb(135, 145, 155);
+            margin-left: 20px; /* Добавляем отступ слева для текста */
+        }
+        button {
+            background-color: rgb(230, 0, 0);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            margin: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: rgb(0, 0, 0);
+        }
+    </style>
 </head>
 <body>
-
+    <div class="container">
+        <a href="./"><button>Назад</button></a>
+        <h2>Предстоящие поездки: </h2>
+        {% if active != None %}
+            {% for p in active %}
+                <div class="ticket-container">
+                    <div class="ticket">
+                        <p>Маршрут: {{p.seats.van.train.name}}</p>
+                        <p>Класс обслуживания: {{p.seats.van.character.get_class_van_display}}</p>
+                        <p>Номер места: {{p.seats.seat_number}}</p>
+                        <a href="./my_trips/{{p.id}}/reject"><button>Отказаться от билета</button></a>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>На текущий момент Вам не предстоит поездок.</p>
+        {% endif %}
+        <h2>Завершенные поездки: </h2>
+        {% if finished == None %}
+            <p>У Вас пока нет завершенных поездок</p>
+        {% else %}
+            {% for p in finished %}
+                <div class="ticket-container">
+                    <div class="ticket">
+                        <p>Маршрут: {{p.seats.van.train.name}}</p>
+                        <p>Класс обслуживания: {{p.seats.van.character.get_class_van_display}}</p>
+                        <p>Номер места: {{p.seats.seat_number}}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
 </body>
 </html>

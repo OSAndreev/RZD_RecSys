@@ -1,30 +1,141 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Личный кабинет</title>
+        <link href="{% static 'bootstrap/css/new.css' %}" rel="stylesheet">
+    <style>
 
-    <title>Главная страница</title>
 
-    {% csrf_token %}
-    <h1>Добро пожаловать, {{user.first_name}} {{user.patronymic}}</h1>
-    <a href="./my_trips"><button style="width:7%;height:3%;">Мои поездки</button></a>
-    <a href="../"><button style="width:10%;height:3%;">Выйти из аккаунта</button></a>
-    <form id="add_form" method="post">
-        {% csrf_token %}
-        <p>Дети в поездке: {{form.trip_with_child}} </p>
-        Еду с животным: {{form.trip_with_animals}}
-        <button form="add_form" type="submit" class="btn.btn-primary">Сохранить</button>
-    </form>
-    <h2>Выберите маршрут следования</h2>
-    {% for p in train %}
-    <div>
-    <span>{{p.place1}} - {{p.place2}} / {{p.place2}} - {{p.place1}}  </span><a href="./routes/{{p.id}}"><button>{{p.name}}</button></a>
-        </div>
-    <p></p>
-    {% endfor %}
+        body {
+            font-family: Arial, sans-serif;
+            background-color: rgb(250, 250, 250);
+            margin: 0;
+            padding: 0;
+        }
 
+ header {
+    background-color: rgb(230, 0, 0);
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+}
+
+.align-right {
+    margin-left: auto;
+}
+
+
+        h1 {
+            font-size: 24px;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border: 1px solid rgb(135, 145, 155);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        button {
+            background-color: rgb(230, 0, 0);
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        .btn-danger {
+            background-color: rgb(230, 0, 0);
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        .btn-lg {
+            font-size: 20px;
+        }
+
+        .float-right {
+            float: right;
+        }
+
+        .btn-container {
+            text-align: right;
+            margin-top: 10px;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+            .form-group {
+        margin-bottom: 15px;
+    }
+
+        h2 {
+            font-size: 20px;
+            margin-top: 20px;
+        }
+
+        .route {
+            border: 1px solid rgb(135, 145, 155);
+            padding: 10px;
+            margin: 10px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    </style>
 </head>
 <body>
+<header>
+    <a href="../" class="btn btn-primary btn-lg align-right">
+        <button type="submit">Выйти из аккаунта</button>
+    </a>
 
+        <div class="btn-container">
+        <a href="./my_trips" class="btn btn-primary btn-lg">
+            <button type="submit">Мои поездки</button>
+        </a>
+    </div>
+</header>
+
+<div class="container">
+    <h1>Добро пожаловать, {{user.first_name}} {{user.patronymic}}!</h1>
+
+<form id="add_form" method="post">
+    {% csrf_token %}
+
+    <div class="form-group mb-3">
+        <label style="font-size: 16px;">Дети в поездке: </label>
+        {{ form.trip_with_child }}
+    </div>
+
+    <div class="form-group mb-3">
+        <label style="font-size: 16px;">Еду с животным: </label>
+        {{ form.trip_with_animals }}
+    </div>
+
+    <button form="add_form" type="submit" class="btn btn-primary">Сохранить</button>
+</form>
+
+
+    <h2>Выберите маршрут следования</h2>
+    {% for p in train %}
+    <div class="route">
+        <span>{{p.place1}} - {{p.place2}} / {{p.place2}} - {{p.place1}}</span>
+        <a href="./routes/{{p.id}}"><button>{{p.name}}</button></a>
+    </div>
+    {% endfor %}
+</div>
 </body>
 </html>

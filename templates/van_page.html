@@ -7,6 +7,75 @@
     <title>Выберите место</title>
    {% csrf_token %}
     <style>
+     body {
+            background-color: rgb(250, 250, 250);
+            font-family: Arial, sans-serif;
+        }
+
+         button {
+            background-color: rgb(135, 145, 155);
+            color: white;
+            border: none;
+            margin: 10px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: rgb(230, 0, 0);
+        }
+
+        .recommendations {
+            background-color: rgb(250, 250, 250);
+            padding: 20px;
+            border: 1px solid rgb(135, 145, 155);
+            border-radius: 5px;
+            margin: 20px;
+        }
+
+        .class-selector {
+            background-color: rgb(250, 250, 250);
+            border: 1px solid rgb(135, 145, 155);
+            border-radius: 5px;
+            padding: 10px;
+            margin: 20px;
+        }
+
+.comfort-card {
+  border: 1px solid rgb(135, 145, 155);
+  border-radius: 5px;
+  padding: 15px;
+  margin: 10px;
+  background-color: rgb(250, 250, 250);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.class-name {
+  color: rgb(230, 0, 0);
+  font-weight: bold;
+}
+
+.select-button {
+  background-color: rgb(135, 145, 155);
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  margin: 5px 0;
+  cursor: pointer;
+}
+
+.select-button:hover {
+  background-color: rgb(230, 0, 0);
+}
+
+        span {
+            display: block;
+        }
+
+        img {
+            vertical-align: middle;
+            margin-right: 5px;
+        }
+
         button {
             width: 3%;
             height: 3%;
@@ -34,22 +103,112 @@
         display: none;
         pointer-events: none;
 }
-    .modalDialog:target {
-	display: block;
-	pointer-events: auto;
+/* Общие стили для модального окна */
+.modalDialog:target {
+    display: block;
+    pointer-events: auto;
 }
 
-    .modalDialog > div {
-        width: 400px;
-        position: relative;
-        margin: 10% auto;
-        padding: 5px 20px 13px 20px;
-        border-radius: 10px;
-        background: #fff;
-        background: -moz-linear-gradient(#fff, #999);
-        background: -webkit-linear-gradient(#fff, #999);
-        background: -o-linear-gradient(#fff, #999);
-    }
+.modalDialog > div {
+    width: 600px; /* Увеличим ширину модального окна */
+    position: relative;
+    margin: 10% auto;
+    padding: 20px; /* Увеличим внутренний отступ для улучшения внешнего вида */
+    border-radius: 15px; /* Увеличим радиус закругления углов */
+    background: #fff; /* Белый фон */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Тень для подчеркивания глубины */
+}
+
+/* Стили для контента модального окна */
+.modalDialog > div {
+    color: #000; /* Цвет текста */
+}
+
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 32px !important; /* Increase the font size with !important */
+    color: #444 !important; /* Dark gray color for the close icon with !important */
+    text-decoration: none !important; /* Remove underline from the button with !important */
+}
+
+
+
+/* Дополнительные стили для элементов внутри модального окна */
+.train-seats {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+
+
+.seat-divider {
+    margin: 0;
+    padding: 0;
+}
+
+.seat-button {
+    margin: 4px;
+    padding: 8px;
+}
+
+.comfort-icon {
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+    position: relative;
+}
+
+.comfort-icon::before {
+    content: attr(title);
+    background-color: red;
+    color: white;
+    font-size: 16px;
+    border-radius: 4px;
+    padding: 10px;
+    position: absolute;
+    top: -50px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+    width: max-content;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.comfort-icon:hover::before {
+    opacity: 1;
+    visibility: visible;
+    background-color: red;
+}
+
+/* Стили для кнопки "Купить билет" */
+.buy-ticket-button {
+    background-color: #e60000; /* Красный цвет фона */
+    color: #fff; /* Белый цвет текста */
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    text-decoration: none; /* Remove underline from text */
+}
+
+/* Стили для кнопки "Отказаться" */
+.no-ticket-button {
+    background-color: #e60000; /* Красный цвет фона */
+    color: #fff; /* Белый цвет текста */
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    text-decoration: none; /* Remove underline from text */
+}
+
+
+
 
     </style>
 </head>
@@ -57,26 +216,41 @@
     {% for j, k, f in seat_numbers %}
         <div id="buyModal{{j}}" class="modalDialog">
         <div>
-            <a href="" title="Закрыть" class="close">X</a>
+           <a href="" title="Закрыть" class="close" style="position: absolute; top: 20px; right: 20px; font-size: 20px; color: #444; text-decoration: none;">X</a>
+
+
             <h2>Покупка билета</h2>
             <p style="display:block;">Класс обслуживания: {{van_ch.get_class_van_display}}</p>
             <p style="display:block;">Место: {{j}}</p>
+
             <p style="display:block;">Стоимость: {{price}} руб.</p>
-            <a href="./{{van.train.id}}/{{van.id}}/{{j}}/buy"><button style="width:25%;height:3.5%;">Купить билет</button></a>
+            <br style="margin-top: 10px;"> <!-- Замените 10px на желаемое значение отступа -->
+
+<a class="buy-ticket-button" href="./{{van.train.id}}/{{van.id}}/{{j}}/buy">Купить билет</a>
+            <br style="margin-top: 10px;">
+            <br style="margin-top: 10px;">
         </div>
     </div>
            <div id="PersonModal{{j}}" class="modalDialog">
         <div>
-            <a href="" title="Закрыть" class="close">X</a>
+<a href="" title="Закрыть" class="close" style="position: absolute; top: 20px; right: 20px; font-size: 20px; color: #444; text-decoration: none;">X</a>
+
+
+
             {% if k == user %}
-                <h2>Это место принадлежит Вам.</h2>
-                <a href="./{{van.train.id}}/{{van.id}}/{{j}}/reject"><button style="width:40%;height:3.5%;">Отказаться от билета</button></a>
+                <h2>Это место принадлежит Вам</h2>
+            <br style="margin-top: 10px;"> <!-- Замените 10px на желаемое значение отступа -->
+            <br style="margin-top: 10px;"> <!-- Замените 10px на желаемое значение отступа -->
+
+            <a class="no-ticket-button" href="./{{van.train.id}}/{{van.id}}/{{j}}/buy">Отказаться от билета</a>
+            <br style="margin-top: 10px;">
+            <br style="margin-top: 10px;">
             {% else %}
                 <h2>Попутчик</h2>
                 <p style="display:block;">{{k.last_name}} {{k.first_name}} {{k.patronymic}}</p>
                 <p style="display:block;">О себе: {{k.about}}</p>
                 {% if phone_view %}
-                    <p style="display:block;">Телефон: {{k.contact}}</p>
+                    <p style="display:block;">Контакт для связи: {{k.contact}}</p>
                 {% endif %}
                 <p style="display:block;">Отношение к курению: {{k.get_smoking_attitude_display.lower}}</p>
                 <p style="display:block;">Общительность: {{k.get_sociability_display.lower}}</p>
@@ -86,134 +260,265 @@
         </div>
     </div>
     {% endfor %}
-
-
-
     <a href="../{{van.train.id}}"><button style="width:5%;height:3%;">Назад</button></a>
+        <div class="class-selector">
     <h1>Выберите место:</h1>
+
+
+
     {% if van_ch.class_van == 1 or van_ch.class_van == 2 %}
         {% for p, k in seat_top %}
+
+
         {% if p == 2 %}
+        <span class="class-name">Верхние места:</span>
             <p style="line-height:0.00025">|</p>
         {% endif %}
+
+
         {% if k == 0 %}
             <a href="#buyModal{{p}}"><button>{{p}}</button></a>
         {% else %}
             <a href="#PersonModal{{p}}"><button>{{p}}</button></a>
         {% endif %}
+
+
         {% if p == 4 or p == 8 or p == 12 or p == 16 or p == 20 or p == 24 or p == 28 or p == 32 or p == 36 %}
             <p style="line-height:0.00025">|</p>
         {% endif %}
         {% endfor %}
+
+
+<!-- вторая строчка -->
         <br>
         {% for p, k in seat_bottom %}
+
+
         {% if p == 1 %}
+    <span class="class-name">Нижние места:</span>
             <p style="line-height:0.00025">|</p>
         {% endif %}
+
+
         {% if k == 0 %}
             <a href="#buyModal{{p}}"><button>{{p}}</button></a>
         {% else %}
             <a href="#PersonModal{{p}}"><button>{{p}}</button></a>
         {% endif %}
+
+
         {% if p == 3 or p == 7 or p == 11 or p == 15 or p == 19 or p == 23 or p == 27 or p == 31 or p == 35 %}
             <p>|</p>
         {% endif %}
         {% endfor %}
+
+
+<!-- третья строчка -->
         <br>
         {% for p, k in seat_side %}
         {% if p == 54 %}
+    <span class="class-name">Боковые места:</span>
             <p style="line-height:0.00025">|</p>
         {% endif %}
+
+
         {% if k == 0 %}
             <a href="#buyModal{{p}}"><button>{{p}}</button></a>
         {% else %}
             <a href="#PersonModal{{p}}"><button>{{p}}</button></a>
         {% endif %}
+
+
         {% if p == 53 or p == 51 or p == 49 or p == 47 or p == 45 or p == 43 or p == 41 or p == 39 or p == 37 %}
+            <p>|</p>
             <p>|</p>
         {% endif %}
         {% endfor %}
     {% endif %}
+
+
+
+
+
     {% if van_ch.class_van == 3 or van_ch.class_van == 4 %}
      {% for p, k in seat_top %}
+
+
         {% if p == 2 %}
+    <span class="class-name">Верхние места:</span>
             <p style="line-height:0.00025">|</p>
         {% endif %}
+
+
         {% if k == 0 %}
             <a href="#buyModal{{p}}"><button>{{p}}</button></a>
         {% else %}
             <a href="#PersonModal{{p}}"><button>{{p}}</button></a>
         {% endif %}
+
+
         {% if p == 4 or p == 8 or p == 12 or p == 16 or p == 20 or p == 24 or p == 28 or p == 32 or p == 36 %}
             <p style="line-height:0.00025">|</p>
         {% endif %}
         {% endfor %}
+
+
         <br>
         {% for p, k in seat_bottom %}
+
+
         {% if p == 1 %}
+    <span class="class-name">Нижние места:</span>
             <p style="line-height:0.00025">|</p>
         {% endif %}
+
+
         {% if k == 0 %}
             <a href="#buyModal{{p}}"><button>{{p}}</button></a>
         {% else %}
             <a href="#PersonModal{{p}}"><button>{{p}}</button></a>
         {% endif %}
+
+
         {% if p == 3 or p == 7 or p == 11 or p == 15 or p == 19 or p == 23 or p == 27 or p == 31 or p == 35 %}
             <p>|</p>
         {% endif %}
         {% endfor %}
     {% endif %}
+
+
+
+
     {% if van_ch.class_van == 5 or van_ch.class_van == 6 %}
         {% for p, k in seat_bottom %}
+
+
         {% if p == 1 %}
+    <span class="class-name">Нижние места:</span>
             <p style="line-height:0.00025">|</p>
         {% endif %}
+
+
         {% if k == 0 %}
+
             <a href="#buyModal{{p}}"><button>{{p}}</button></a>
         {% else %}
             <a href="#PersonModal{{p}}"><button>{{p}}</button></a>
         {% endif %}
+
+
         {% if p == 2 or p == 4 or p == 6 or p == 8 or p == 10 or p == 12 or p == 14 or p == 16 or p == 18 %}
             <p>|</p>
         {% endif %}
         {% endfor %}
     {% endif %}
+
+
+
+
     {% if van_ch.class_van == 7 %}
         {% for p, k in seat_top %}
+
+
         {% if p == 2 %}
+    <span class="class-name">Нижние места:</span>
             <p style="line-height:0.00025">|</p>
         {% endif %}
+
+
         {% if k == 0 %}
             <a style="margin-right: 15" href="#buyModal{{p}}"><button>{{p}}</button></a>
         {% else %}
             <a style="margin-right: 15" href="#PersonModal{{p}}"><button>{{p}}</button></a>
         {% endif %}
 
+
         {% if p == 2 or p == 4 or p == 6 or p == 8 or p == 10 or p == 12 or p == 14 or p == 16 or p == 18 %}
             <p style="line-height:0.00025">|</p>
         {% endif %}
         {% endfor %}
+
+
+
         <br>
         {% for p, k in seat_bottom %}
+
         {% if p == 1 %}
             <p style="line-height:0.00025">|</p>
         {% endif %}
+
+
         {% if k == 0 %}
             <a style="margin-right: 15" href="#buyModal{{p}}"><button>{{p}}</button></a>
         {% else %}
             <a style="margin-right: 15" href="#PersonModal{{p}}"><button>{{p}}</button></a>
         {% endif %}
+
+
+
         {% if p == 1 or p == 3 or p == 5 or p == 7 or p == 9 or p == 11 or p == 13 or p == 15 or p == 17 %}
             <p style="line-height:0.00025">|</p>
         {% endif %}
         {% endfor %}
     {% endif %}
+                 </div>
 
-    <h2>{{van_ch.get_class_van_display}}: {{van_ch.food}} {{van_ch.info_entertainment}} {{van_ch.linen}}
-             {{van_ch.biotoilet}} {{van_ch.conditioner}} {{van_ch.cosmetic}} {{van_ch.press}}
-             {{van_ch.pet}} {{van_ch.bath}} {{van_ch.business_lounge}} {{van_ch.taxi}}</h2>
+
+
+<div class="comfort-card">
+          <div class="icon-list">
+                <span class="class-name">Удобства {{van_ch.get_class_van_display}}:</span>
+              <span>&nbsp;</span>
+    <!-- № 1 - Питание -->
+                {% if van_ch.food %}
+                  <img src="https://cwp.rzd.ru/api/media/resources/1734682" alt="icons-28.svg" class="comfort-icon" title="Питание">
+                {% endif %}
+                    <!-- № 2 - Информационно-развлекательный сервис -->
+                    {% if van_ch.info_entertaiment %}
+                      <img src="https://cwp.rzd.ru/api/media/resources/1734681" alt="icons-01.svg" class="comfort-icon" title="ИРС (Информационно-развлекательный сервис">
+                    {% endif %}
+                    <!-- № 3 - Постельное белье -->
+                    {% if van_ch.linen %}
+                      <img src="https://cwp.rzd.ru/api/media/resources/1734685" alt="icons-23.svg" class="comfort-icon" title="Постельное белье">
+                    {% endif %}
+                    <!-- № 4 - Биотуалет -->
+                    {% if van_ch.biotoilet %}
+                      <img src="https://cwp.rzd.ru/api/media/resources/1734678" alt="icons-26.svg" class="comfort-icon" title="Биотуалет">
+                    {% endif %}
+                    <!-- № 5 - Кондиционер -->
+                    {% if van_ch.conditioner %}
+                      <img src="https://cwp.rzd.ru/api/media/resources/1734677" alt="icons-29.svg" class="comfort-icon" title="Кондиционер">
+                    {% endif %}
+                    <!-- № 6 - Санитарно-гигиенический набор -->
+                    {% if pvan_ch.cosmetic %}
+                      <img src="https://cwp.rzd.ru/api/media/resources/1734683" alt="icons-05.svg" class="comfort-icon" title="Санитарно-гигиенический набор">
+                    {% endif %}
+                    <!-- № 7 - Пресса -->
+                    {% if van_ch.press %}
+                      <img src="https://cwp.rzd.ru/api/media/resources/1734684" alt="icons-09.svg" class="comfort-icon" title="Пресса">
+                    {% endif %}
+                    <!-- № 8 - Вагон с услугами для животных -->
+                    {% if van_ch.pet %}
+                      <img src="https://cwp.rzd.ru/api/media/resources/1734686" alt="icons-31.svg" class="comfort-icon" title="Услуги для животных">
+                    {% endif %}
+                    <!-- № 9 - Душ -->
+                    {% if van_ch.bath %}
+                      <img src="https://cwp.rzd.ru/api/media/resources/1734680" alt="icons-10.svg" class="comfort-icon" title="Душ">
+                    {% endif %}
+                    <!-- № 10 - Бизнес-зал -->
+                    {% if van_ch.business_lounge %}
+                      <img src="https://cwp.rzd.ru/api/media/resources/1754861" alt="_Vip (1).svg" class="comfort-icon" title="Бизнес-зал">
+                    {% endif %}
+                    <!-- № 11 - Такси -->
+                    {% if van_ch.taxi %}
+                      <img src="https://cwp.rzd.ru/api/media/resources/1754860" alt="_Transfer (1).svg" class="comfort-icon" title="Трансфер">
+        {% endif %}
+      </div>
+    </div>
+
 
 
 
 </body>
 </html>
+

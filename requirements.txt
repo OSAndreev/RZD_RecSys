@@ -1,6 +1,3 @@
 django
 psycopg2-binary
 pgsql
-sklearn
-numpy
-pandas

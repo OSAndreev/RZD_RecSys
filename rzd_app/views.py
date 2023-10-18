@@ -8,12 +8,13 @@ from .fill_database import *
 from .forms import *
 import numpy as np
 from .RecSys import *
+from .fill_passengers_seats import *
 
 
 def start_page(request):
-    # fill_database_van_character()
-    # fill_database_train()
-    # fill_database_van()
+    fill_database_van_character()
+    fill_database_train()
+    fill_database_van()
 
     return render(request, 'start_page.html')
 
@@ -71,7 +72,9 @@ def create_user(request):
 
 
 def main_page(request):
+
     check_fill_seats()
+    #fill_passengers_seats(Train.objects.get(id=1))
     user_id = get_object_or_404(User, id=request.user.id)
     user_obj = Passenger.objects.get(django_user=user_id)
 
@@ -142,6 +145,11 @@ def route_page(request, pk=''):
     user_obj = Passenger.objects.get(django_user=user_id)
     train = Train.objects.get(id=pk)
     vans = Van.objects.filter(train=train)
+    if Trip.objects.filter(finished=False, passenger=user_obj).exists():
+        trip = Trip.objects.filter(finished=False, passenger=user_obj)[0]
+        animals = trip.with_animals
+    else:
+        animals = user_obj.trip_with_animals
 
     # Место для рекомендаций
 
@@ -150,11 +158,10 @@ def route_page(request, pk=''):
 
     # print(main_dict(train, user_obj)) #Рассматривает все свободные места в выбранном поезде
 
-    if Trip.objects.filter().first() is None:
-        history = False
-    else:
+    if Trip.objects.filter(finished=True, passenger=user_obj).exists():
         history = True
-
+    else:
+        history = False
     top_or_bot_matrix = top_bot_m()
     class_mx = class_matrix()
     loc_m = location_matrix()
@@ -180,12 +187,12 @@ def route_page(request, pk=''):
         pre_ranked_collaborative = get_collab_filtering(user_seats_m, user_index=user_obj.id)
         ranked_collaborative = {get_seat(id): pre_ranked_collaborative[id] for id in pre_ranked_collaborative.keys()}
 
-        recs = recommend(dict_of_dict, pets=user_obj.trip_with_animals, history=history,
+        recs = recommend(dict_of_dict, pets=animals, history=history,
                          ranked_popular=ranked_popular, ranked_class=ranked_class,
                          ranked_top_or_bot=ranked_top_or_bot, ranked_location=ranked_location,
                          ranked_collaborative=ranked_collaborative)
     else:
-        recs = recommend(dict_of_dict, pets=user_obj.trip_with_animals, history=history,
+        recs = recommend(dict_of_dict, pets=animals, history=history,
                          ranked_popular=ranked_popular)
 
     plac = vans.filter(character__in=[1, 2])
@@ -200,6 +207,12 @@ def route_page(request, pk=''):
         sv = None
     if list(lux.values_list('id')) == []:
         lux = None
+
+    seat1 = Seat.objects.get(id=recs[0][0])
+    seat2 = Seat.objects.get(id=recs[0][1])
+    seat3 = Seat.objects.get(id=recs[0][2])
+
+
     return render(request, 'route_page.html', context={
         'plac': plac,
         'coupe': coupe,
@@ -207,9 +220,9 @@ def route_page(request, pk=''):
         'lux': lux,
         'train': train,
         'user': user_obj,
-        'recs_1': recs[0][0],
-        'recs_2': recs[0][1],
-        'recs_3': recs[0][2],
+        'recs_1': seat1,
+        'recs_2': seat2,
+        'recs_3': seat3,
         'reason_1':recs[1][0],
         'reason_2': recs[1][1],
         'reason_3': recs[1][2]
@@ -800,7 +813,6 @@ def user_seats_matrix():
 
 
     array = [[0 for j in range(len(all_seats_val))] for i in range(min_id)] + string[::-1]
-    print('array', array)
     user_seats_matrix = np.array(array)
 
     return user_seats_matrix

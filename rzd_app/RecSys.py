@@ -145,23 +145,18 @@ def get_popular_filtering(user_seats_matrix):
     важно, чтобы в матрице были только незанятые места в текущий момент. \
     Возвращает индекс наиболее подходящего места в матрице'
     seats_filtering = Filtering(user_seats_matrix)
-    print(user_seats_matrix)
     seats = seats_filtering.get_popular()
-    print('gpf', seats)
     return seats
 
 
 def recommend(dict_of_dict: dict, pets=False, history=False, **kwargs):
-    print(dict_of_dict)
     ranked_popular = kwargs.get('ranked_popular')
-    print('first', ranked_popular[1])
     if history:
         ranked_class = kwargs.get('ranked_class')
         ranked_top_or_bot = kwargs.get('ranked_top_or_bot')
         ranked_location = kwargs.get('ranked_location')
         ranked_collaborative = kwargs.get('ranked_collaborative')
     seats = dict_of_dict.keys()
-    print(seats)
     if history:
         first_seat = sorted(seats, key=lambda seat: (dict_of_dict[seat]['pets'] * pets,
                                                      -dict_of_dict[seat]['free_seats'],
@@ -218,7 +213,7 @@ def recommend(dict_of_dict: dict, pets=False, history=False, **kwargs):
         if (first_dict['pets'] == False) and pets:
             first_reason.append('Без животных')
         if first_dict['free_seats'] > 0:
-            first_reason.append('{0} свободных мест'.format(first_dict['free_seats']))
+            first_reason.append('{0} свободных мест в секторе'.format(first_dict['free_seats']))
         if (ranked_class[first_dict['seat_class']] == 0) or (ranked_top_or_bot[first_dict['bottom']] == 0) or (
                 ranked_location[first_dict['location']] == 0):
             first_reason.append('Основываясь на ваших предпочтениях')
@@ -228,23 +223,23 @@ def recommend(dict_of_dict: dict, pets=False, history=False, **kwargs):
         if (second_dict['pets'] == False) and pets:
             second_reason.append('Без животных')
         if second_dict['free_seats'] > 0:
-            second_reason.append('{0} свободных мест'.format(second_dict['free_seats']))
+            second_reason.append('{0} свободных мест в секторе'.format(second_dict['free_seats']))
         if second_dict['our_cluster'] > 0:
             second_reason.append('Подходящие вам попутчики')
 
         if (third_dict['pets'] == False) and pets:
             third_reason.append('Без животных')
         if third_dict['free_seats'] > 0:
-            third_reason.append('{0} свободных мест'.format(third_dict['free_seats']))
+            third_reason.append('{0} свободных мест в секторе'.format(third_dict['free_seats']))
         if ranked_collaborative[third_seat] <= 3:
-            third_reason.append('Может быть интересно')
+            third_reason.append('Попробуйте новое')
         if third_dict['our_cluster'] > 0:
             third_reason.append('Подходящие вам попутчики')
     else:
         if (first_dict['pets'] == False) and pets:
             first_reason.append('Без животных')
         if first_dict['free_seats'] > 0:
-            first_reason.append('{0} свободных мест'.format(first_dict['free_seats']))
+            first_reason.append('{0} свободных мест в секторе'.format(first_dict['free_seats']))
         if first_dict['our_cluster'] > 0:
             first_reason.append('Подходящие вам попутчики')
         if ranked_popular[first_seat] <= 3:
@@ -253,7 +248,7 @@ def recommend(dict_of_dict: dict, pets=False, history=False, **kwargs):
         if (second_dict['pets'] == False) and pets:
             second_reason.append('Без животных')
         if second_dict['free_seats'] > 0:
-            second_reason.append('{0} свободных мест'.format(second_dict['free_seats']))
+            second_reason.append('{0} свободных мест в секторе'.format(second_dict['free_seats']))
         if second_dict['our_cluster'] > 0:
             second_reason.append('Подходящие вам попутчики')
         if ranked_popular[second_seat] <= 3:
@@ -262,7 +257,7 @@ def recommend(dict_of_dict: dict, pets=False, history=False, **kwargs):
         if (third_dict['pets'] == False) and pets:
             third_reason.append('Без животных')
         if third_dict['free_seats'] > 0:
-            third_reason.append('{0} свободных мест'.format(third_dict['free_seats']))
+            third_reason.append('{0} свободных мест в секторе'.format(third_dict['free_seats']))
         if ranked_popular[third_seat] <= 3:
             third_reason.append('Часто выбирают')
     return [[first_seat, second_seat, third_seat], [first_reason, second_reason, third_reason]]

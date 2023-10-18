@@ -1,85 +1,475 @@
 <!DOCTYPE html>
 <html lang="en">
+{% load static %}
+
+
 <head>
+
     <meta charset="UTF-8">
     <title>Страница маршрута</title>
-    {% csrf_token %}
-    <a href="../">
-        <button style="width:5%;height:3%;">Назад</button>
-    </a>
-    <h1>Тут будут рекомендации</h1>
-    <p>{{ recs_1 }}</p>
-    {% for reason in reason_1 %}
-    <p>{{ reason }}</p>
-    {% endfor %}
-    <p>{{ recs_2 }}</p>
-    {% for reason in reason_2 %}
-    <p>{{ reason }}</p>
-    {% endfor %}
-    <p>{{ recs_3 }}</p>
-    {% for reason in reason_3 %}
-    <p>{{ reason }}</p>
-    {% endfor %}
-    <h1>-----------------------------------------------</h1>
-    <h2>Выберите класс обслуживания</h2>
-    {% if plac != None %}
-    <p>Плацкарт: </p>
-    {% for p in plac %}
-    {% if p.character.pet == user.trip_with_animals or p.character.pet == True %}
-    <span>{{p.character.get_class_van_display}}: {{p.character.food}} {{p.character.info_entertainment}} {{p.character.linen}}
-             {{p.character.biotoilet}} {{p.character.conditioner}} {{p.character.cosmetic}} {{p.character.press}}
-             {{p.character.pet}} {{p.character.bath}} {{p.character.business_lounge}} {{p.character.taxi}}</span>
-    <a href="./chosen/{{p.id}}">
-        <button>Выбрать</button>
-    </a>
-    <p></p>
-    {% endif %}
-    {% endfor %}
-    {% endif %}
-    {% if coupe != None %}
-    <p>Купе: </p>
-    {% for p in coupe %}
-    {% if p.character.pet == user.trip_with_animals or p.character.pet == True %}
-    <span>{{p.character.get_class_van_display}}: {{p.character.food}} {{p.character.info_entertainment}} {{p.character.linen}}
-             {{p.character.biotoilet}} {{p.character.conditioner}} {{p.character.cosmetic}} {{p.character.press}}
-             {{p.character.pet}} {{p.character.bath}} {{p.character.business_lounge}} {{p.character.taxi}}</span>
-    <a href="./chosen/{{p.id}}">
-        <button>Выбрать</button>
-    </a>
-    <p></p>
-    {% endif %}
-    {% endfor %}
-    {% endif %}
-    {% if sv != None %}
-    <p>СВ: </p>
-    {% for p in sv %}
-    {% if p.character.pet == user.trip_with_animals or p.character.pet == True %}
-    <span>{{p.character.get_class_van_display}}: {{p.character.food}} {{p.character.info_entertainment}} {{p.character.linen}}
-             {{p.character.biotoilet}} {{p.character.conditioner}} {{p.character.cosmetic}} {{p.character.press}}
-             {{p.character.pet}} {{p.character.bath}} {{p.character.business_lounge}} {{p.character.taxi}}</span>
-    <a href="./chosen/{{p.id}}">
-        <button>Выбрать</button>
-    </a>
-    <p></p>
-    {% endif %}
-    {% endfor %}
-    {% endif %}
-    {% if lux != None %}
-    <p>Люкс: </p>
-    {% for p in lux %}
-    {% if p.character.pet == user.trip_with_animals or p.character.pet == True %}
-    <span>{{p.character.get_class_van_display}}: {{p.character.food}} {{p.character.info_entertainment}} {{p.character.linen}}
-             {{p.character.biotoilet}} {{p.character.conditioner}} {{p.character.cosmetic}} {{p.character.press}}
-             {{p.character.pet}} {{p.character.bath}} {{p.character.business_lounge}} {{p.character.taxi}}</span>
-    <a href="./chosen/{{p.id}}">
-        <button>Выбрать</button>
-    </a>
-    <p></p>
-    {% endif %}
-    {% endfor %}
-    {% endif %}
+    <style>
+        body {
+            background-color: rgb(250, 250, 250);
+            font-family: Arial, sans-serif;
+        }
+
+        h1, h2 {
+            color: rgb(230, 0, 0);
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        button {
+            background-color: rgb(135, 145, 155);
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            margin: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: rgb(230, 0, 0);
+        }
+
+        .recommendations {
+            background-color: rgb(250, 250, 250);
+            padding: 20px;
+            border: 1px solid rgb(135, 145, 155);
+            border-radius: 5px;
+            margin: 20px;
+        }
+
+        .class-selector {
+            background-color: rgb(250, 250, 250);
+            border: 1px solid rgb(135, 145, 155);
+            border-radius: 5px;
+            padding: 10px;
+            margin: 20px;
+        }
+
+        p {
+            margin: 10px 0;
+        }
+
+        span {
+            display: block;
+        }
+
+        img {
+            vertical-align: middle;
+            margin-right: 5px;
+        }
+
+        .comfort-card {
+  border: 1px solid rgb(135, 145, 155);
+  border-radius: 5px;
+  padding: 15px;
+  margin: 10px;
+  background-color: rgb(250, 250, 250);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.class-name {
+  color: rgb(230, 0, 0);
+  font-weight: bold;
+}
+
+.icon-list {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.select-button {
+  background-color: rgb(135, 145, 155);
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  margin: 5px 0;
+  cursor: pointer;
+}
+
+.select-button:hover {
+  background-color: rgb(230, 0, 0);
+}
+
+
+.comfort-icon {
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+    position: relative;
+}
+
+.comfort-icon::before {
+    content: attr(title);
+    background-color: red;
+    color: white;
+    font-size: 16px;
+    border-radius: 4px;
+    padding: 10px;
+    position: absolute;
+    top: -50px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+    width: max-content;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.comfort-icon:hover::before {
+    opacity: 1;
+    visibility: visible;
+    visibility: visible;
+    background-color: red;
+}
+
+
+.card-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.comfort-cards {
+    border: 1px solid rgb(135, 145, 155);
+    border-radius: 5px;
+    padding: 15px;
+    margin: 10px;
+    background-color: rgb(230, 0, 0); /* Red background color */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: calc(33.33% - 20px);
+    color: white; /* White text color */
+}
+
+.comfort-cards p {
+    margin: 10px 0;
+}
+
+.comfort-cards p:first-child {
+    font-weight: bold; /* Make the first paragraph (seat number) bold */
+}
+
+/* Additional styling for aesthetics */
+.comfort-cards:hover {
+    transform: translateY(-5px);
+    transition: transform 0.2s ease;
+}
+
+/* Optional: Add a border for hover effect */
+.comfort-cards:hover {
+    border: 1px solid white;
+}
+
+.selects-button {
+    background-color: white;
+    color: black;
+    border: 1px solid gray;
+    transition: background-color 0.3s;
+    font-weight: bold; /* Сделать текст внутри кнопки жирным */
+    display: inline-block; /* Сделать кнопки строчными элементами */
+    margin: 0; /* Убрать внешние отступы для кнопок */
+    padding: 10px 20px; /* Добавить внутренние отступы для кнопок */
+}
+
+.selects-button:hover {
+    background-color: gray;
+    color: white;
+}
+
+.comfort-cards-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+
+
+    </style>
 </head>
 <body>
+    <a href="../"><button>Назад</button></a>
+    <div class="recommendations">
+    <h1>Наиболее подходящие вам места:</h1>
+    <div class="card-container">
+        <div class="comfort-cards">
+            <img src="{% static 'bootstrap/img/ticket.png' %}" alt="Flivan" style="width: 50%; height: 50%;">
+            <p style="font-size: 24px; font-weight: bold;">Место {{ recs_1.seat_number }}</p>
+            <p> Вагон {{recs_1.van.character.get_class_van_display}} </p>
+            {% for reason in reason_1 %}
+            <p>{{ reason }}</p>
+            {% endfor %}
+            <a href="./chosen/{{recs_1.van.id}}#buyModal{{recs_1.seat_number}}"><button class="selects-button">Выбрать</button></a>
+            <span>&nbsp;</span>
+        </div>
+        <div class="comfort-cards">
+            <img src="{% static 'bootstrap/img/ticket.png' %}" alt="Flivan" style="width: 50%; height: 50%;">
+            <p style="font-size: 24px; font-weight: bold;">Место {{ recs_2.seat_number }}</p>
+            <p> Вагон {{ recs_2.van.character.get_class_van_display}} </p>
+            {% for reason in reason_2 %}
+            <p>{{ reason }}</p>
+            {% endfor %}
+            <a href="./chosen/{{recs_2.van.id}}#buyModal{{recs_2.seat_number}}"><button class="selects-button">Выбрать</button></a>
+            <span>&nbsp;</span>
+        </div>
+        <div class="comfort-cards">
+            <img src="{% static 'bootstrap/img/ticket.png' %}" alt="" style="width: 50%; height: 50%;">
+
+           <p style="font-size: 24px; font-weight: bold;">Место {{ recs_3.seat_number }}</p>
+
+            <p> Вагон {{ recs_3.van.character.get_class_van_display }}</p>
+            {% for reason in reason_3 %}
+            <p>{{ reason }}</p>
+            {% endfor %}
+            <a href="./chosen/{{recs_3.van.id}}#buyModal{{recs_3.seat_number}}"><button class="selects-button">Выбрать</button></a>
+            <span>&nbsp;</span>
+        </div>
+    </div>
+</div>
+    <div class="class-selector">
+        <h2>Выберите класс обслуживания:</h2>
+        {% if plac != None %}
+{% for p in plac %}
+  {% if p.character.pet == user.trip_with_animals or p.character.pet == True %}
+<div class="comfort-card">
+  <span class="class-name">{{p.character.get_class_van_display}} Плацкарт</span>
+  <div class="icon-list">
+    <!-- № 1 - Питание -->
+    {% if p.character.food %}
+      <img src="https://cwp.rzd.ru/api/media/resources/1734682" alt="icons-28.svg" class="comfort-icon" title="Питание">
+    {% endif %}
+        <!-- № 2 - Информационно-развлекательный сервис -->
+        {% if p.character.info_entertaiment %}
+          <img src="https://cwp.rzd.ru/api/media/resources/1734681" alt="icons-01.svg" class="comfort-icon" title="ИРС (Информационно-развлекательный сервис">
+        {% endif %}
+        <!-- № 3 - Постельное белье -->
+        {% if p.character.linen %}
+          <img src="https://cwp.rzd.ru/api/media/resources/1734685" alt="icons-23.svg" class="comfort-icon" title="Постельное белье">
+        {% endif %}
+        <!-- № 4 - Биотуалет -->
+        {% if p.character.biotoilet %}
+          <img src="https://cwp.rzd.ru/api/media/resources/1734678" alt="icons-26.svg" class="comfort-icon" title="Биотуалет">
+        {% endif %}
+        <!-- № 5 - Кондиционер -->
+        {% if p.character.conditioner %}
+          <img src="https://cwp.rzd.ru/api/media/resources/1734677" alt="icons-29.svg" class="comfort-icon" title="Кондиционер">
+        {% endif %}
+        <!-- № 6 - Санитарно-гигиенический набор -->
+        {% if p.character.cosmetic %}
+          <img src="https://cwp.rzd.ru/api/media/resources/1734683" alt="icons-05.svg" class="comfort-icon" title="Санитарно-гигиенический набор">
+        {% endif %}
+        <!-- № 7 - Пресса -->
+        {% if p.character.press %}
+          <img src="https://cwp.rzd.ru/api/media/resources/1734684" alt="icons-09.svg" class="comfort-icon" title="Пресса">
+        {% endif %}
+        <!-- № 8 - Вагон с услугами для животных -->
+        {% if p.character.pet %}
+          <img src="https://cwp.rzd.ru/api/media/resources/1734686" alt="icons-31.svg" class="comfort-icon" title="Услуги для животных">
+        {% endif %}
+        <!-- № 9 - Душ -->
+        {% if p.character.bath %}
+          <img src="https://cwp.rzd.ru/api/media/resources/1734680" alt="icons-10.svg" class="comfort-icon" title="Душ">
+        {% endif %}
+        <!-- № 10 - Бизнес-зал -->
+        {% if p.character.business_lounge %}
+          <img src="https://cwp.rzd.ru/api/media/resources/1754861" alt="_Vip (1).svg" class="comfort-icon" title="Бизнес-зал">
+        {% endif %}
+        <!-- № 11 - Такси -->
+        {% if p.character.taxi %}
+          <img src="https://cwp.rzd.ru/api/media/resources/1754860" alt="_Transfer (1).svg" class="comfort-icon" title="Трансфер">
+        {% endif %}
+      </div>
+      <a href="./chosen/{{p.id}}"><button class="select-button">Выбрать</button></a>
+     <span>&nbsp;</span>
+
+    </div>
+    <p></p>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    {% if coupe != None %}
+        {% for p in coupe %}
+        {% if p.character.pet == user.trip_with_animals or p.character.pet == True %}
+                 <div class="comfort-card">
+      <span class="class-name">{{p.character.get_class_van_display}} Купе</span>
+          <div class="icon-list">
+    <!-- № 1 - Питание -->
+    {% if p.character.food %}
+      <img src="https://cwp.rzd.ru/api/media/resources/1734682" alt="icons-28.svg" class="comfort-icon" title="Питание">
+    {% endif %}
+        <!-- № 2 - Информационно-развлекательный сервис -->
+        {% if p.character.info_entertaiment %}
+          <img src="https://cwp.rzd.ru/api/media/resources/1734681" alt="icons-01.svg" class="comfort-icon" title="ИРС (Информационно-развлекательный сервис">
+        {% endif %}
+        <!-- № 3 - Постельное белье -->
+        {% if p.character.linen %}
+          <img src="https://cwp.rzd.ru/api/media/resources/1734685" alt="icons-23.svg" class="comfort-icon" title="Постельное белье">
+        {% endif %}
+        <!-- № 4 - Биотуалет -->
+        {% if p.character.biotoilet %}
+          <img src="https://cwp.rzd.ru/api/media/resources/1734678" alt="icons-26.svg" class="comfort-icon" title="Биотуалет">
+        {% endif %}
+        <!-- № 5 - Кондиционер -->
+        {% if p.character.conditioner %}
+          <img src="https://cwp.rzd.ru/api/media/resources/1734677" alt="icons-29.svg" class="comfort-icon" title="Кондиционер">
+        {% endif %}
+        <!-- № 6 - Санитарно-гигиенический набор -->
+        {% if p.character.cosmetic %}
+          <img src="https://cwp.rzd.ru/api/media/resources/1734683" alt="icons-05.svg" class="comfort-icon" title="Санитарно-гигиенический набор">
+        {% endif %}
+        <!-- № 7 - Пресса -->
+        {% if p.character.press %}
+          <img src="https://cwp.rzd.ru/api/media/resources/1734684" alt="icons-09.svg" class="comfort-icon" title="Пресса">
+        {% endif %}
+        <!-- № 8 - Вагон с услугами для животных -->
+        {% if p.character.pet %}
+          <img src="https://cwp.rzd.ru/api/media/resources/1734686" alt="icons-31.svg" class="comfort-icon" title="Услуги для животных">
+        {% endif %}
+        <!-- № 9 - Душ -->
+        {% if p.character.bath %}
+          <img src="https://cwp.rzd.ru/api/media/resources/1734680" alt="icons-10.svg" class="comfort-icon" title="Душ">
+        {% endif %}
+        <!-- № 10 - Бизнес-зал -->
+        {% if p.character.business_lounge %}
+          <img src="https://cwp.rzd.ru/api/media/resources/1754861" alt="_Vip (1).svg" class="comfort-icon" title="Бизнес-зал">
+        {% endif %}
+        <!-- № 11 - Такси -->
+        {% if p.character.taxi %}
+          <img src="https://cwp.rzd.ru/api/media/resources/1754860" alt="_Transfer (1).svg" class="comfort-icon" title="Трансфер">
+        {% endif %}
+      </div>
+                     <span>&nbsp;</span>
+      <a href="./chosen/{{p.id}}"><button class="select-button">Выбрать</button></a>
+    </div>
+    <p></p>
+        {% endif %}
+        {% endfor %}
+    {% endif %}
+    {% if sv != None %}
+        {% for p in sv %}
+        {% if p.character.pet == user.trip_with_animals or p.character.pet == True %}
+            <div class="comfort-card">
+      <span class="class-name">{{p.character.get_class_van_display}} СВ</span>
+          <div class="icon-list">
+    <!-- № 1 - Питание -->
+    {% if p.character.food %}
+      <img src="https://cwp.rzd.ru/api/media/resources/1734682" alt="icons-28.svg" class="comfort-icon" title="Питание">
+    {% endif %}
+        <!-- № 2 - Информационно-развлекательный сервис -->
+        {% if p.character.info_entertaiment %}
+          <img src="https://cwp.rzd.ru/api/media/resources/1734681" alt="icons-01.svg" class="comfort-icon" title="ИРС (Информационно-развлекательный сервис">
+        {% endif %}
+        <!-- № 3 - Постельное белье -->
+        {% if p.character.linen %}
+          <img src="https://cwp.rzd.ru/api/media/resources/1734685" alt="icons-23.svg" class="comfort-icon" title="Постельное белье">
+        {% endif %}
+        <!-- № 4 - Биотуалет -->
+        {% if p.character.biotoilet %}
+          <img src="https://cwp.rzd.ru/api/media/resources/1734678" alt="icons-26.svg" class="comfort-icon" title="Биотуалет">
+        {% endif %}
+        <!-- № 5 - Кондиционер -->
+        {% if p.character.conditioner %}
+          <img src="https://cwp.rzd.ru/api/media/resources/1734677" alt="icons-29.svg" class="comfort-icon" title="Кондиционер">
+        {% endif %}
+        <!-- № 6 - Санитарно-гигиенический набор -->
+        {% if p.character.cosmetic %}
+          <img src="https://cwp.rzd.ru/api/media/resources/1734683" alt="icons-05.svg" class="comfort-icon" title="Санитарно-гигиенический набор">
+        {% endif %}
+        <!-- № 7 - Пресса -->
+        {% if p.character.press %}
+          <img src="https://cwp.rzd.ru/api/media/resources/1734684" alt="icons-09.svg" class="comfort-icon" title="Пресса">
+        {% endif %}
+        <!-- № 8 - Вагон с услугами для животных -->
+        {% if p.character.pet %}
+          <img src="https://cwp.rzd.ru/api/media/resources/1734686" alt="icons-31.svg" class="comfort-icon" title="Услуги для животных">
+        {% endif %}
+        <!-- № 9 - Душ -->
+        {% if p.character.bath %}
+          <img src="https://cwp.rzd.ru/api/media/resources/1734680" alt="icons-10.svg" class="comfort-icon" title="Душ">
+        {% endif %}
+        <!-- № 10 - Бизнес-зал -->
+        {% if p.character.business_lounge %}
+          <img src="https://cwp.rzd.ru/api/media/resources/1754861" alt="_Vip (1).svg" class="comfort-icon" title="Бизнес-зал">
+        {% endif %}
+        <!-- № 11 - Такси -->
+        {% if p.character.taxi %}
+          <img src="https://cwp.rzd.ru/api/media/resources/1754860" alt="_Transfer (1).svg" class="comfort-icon" title="Трансфер">
+        {% endif %}
+      </div>
+                <span>&nbsp;</span>
+      <a href="./chosen/{{p.id}}"><button class="select-button">Выбрать</button></a>
+    </div>
+    <p></p>
+        {% endif %}
+        {% endfor %}
+    {% endif %}
+    {% if lux != None %}
+        {% for p in lux %}
+        {% if p.character.pet == user.trip_with_animals or p.character.pet == True %}
+                <div class="comfort-card">
+      <span class="class-name">{{p.character.get_class_van_display}} Люкс</span>
+         <div class="icon-list">
+    <!-- № 1 - Питание -->
+    {% if p.character.food %}
+      <img src="https://cwp.rzd.ru/api/media/resources/1734682" alt="icons-28.svg" class="comfort-icon" title="Питание">
+    {% endif %}
+        <!-- № 2 - Информационно-развлекательный сервис -->
+        {% if p.character.info_entertaiment %}
+          <img src="https://cwp.rzd.ru/api/media/resources/1734681" alt="icons-01.svg" class="comfort-icon" title="ИРС (Информационно-развлекательный сервис">
+        {% endif %}
+        <!-- № 3 - Постельное белье -->
+        {% if p.character.linen %}
+          <img src="https://cwp.rzd.ru/api/media/resources/1734685" alt="icons-23.svg" class="comfort-icon" title="Постельное белье">
+        {% endif %}
+        <!-- № 4 - Биотуалет -->
+        {% if p.character.biotoilet %}
+          <img src="https://cwp.rzd.ru/api/media/resources/1734678" alt="icons-26.svg" class="comfort-icon" title="Биотуалет">
+        {% endif %}
+        <!-- № 5 - Кондиционер -->
+        {% if p.character.conditioner %}
+          <img src="https://cwp.rzd.ru/api/media/resources/1734677" alt="icons-29.svg" class="comfort-icon" title="Кондиционер">
+        {% endif %}
+        <!-- № 6 - Санитарно-гигиенический набор -->
+        {% if p.character.cosmetic %}
+          <img src="https://cwp.rzd.ru/api/media/resources/1734683" alt="icons-05.svg" class="comfort-icon" title="Санитарно-гигиенический набор">
+        {% endif %}
+        <!-- № 7 - Пресса -->
+        {% if p.character.press %}
+          <img src="https://cwp.rzd.ru/api/media/resources/1734684" alt="icons-09.svg" class="comfort-icon" title="Пресса">
+        {% endif %}
+        <!-- № 8 - Вагон с услугами для животных -->
+        {% if p.character.pet %}
+          <img src="https://cwp.rzd.ru/api/media/resources/1734686" alt="icons-31.svg" class="comfort-icon" title="Услуги для животных">
+        {% endif %}
+        <!-- № 9 - Душ -->
+        {% if p.character.bath %}
+          <img src="https://cwp.rzd.ru/api/media/resources/1734680" alt="icons-10.svg" class="comfort-icon" title="Душ">
+        {% endif %}
+        <!-- № 10 - Бизнес-зал -->
+        {% if p.character.business_lounge %}
+          <img src="https://cwp.rzd.ru/api/media/resources/1754861" alt="_Vip (1).svg" class="comfort-icon" title="Бизнес-зал">
+        {% endif %}
+        <!-- № 11 - Такси -->
+        {% if p.character.taxi %}
+          <img src="https://cwp.rzd.ru/api/media/resources/1754860" alt="_Transfer (1).svg" class="comfort-icon" title="Трансфер">
+        {% endif %}
+      </div>
+                    <span>&nbsp;</span>
+      <a href="./chosen/{{p.id}}"><button class="select-button">Выбрать</button></a>
+    </div>
+    <p></p>
+        {% endif %}
+        {% endfor %}
+    {% endif %}
+        </div>
+
+
 
 </body>
 </html>
