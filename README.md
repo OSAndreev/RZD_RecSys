@@ -1,6 +1,9 @@
 # RZD_RecSys
 
 
+
+https://github.com/OSAndreev/RZD_RecSys/assets/146976873/2a30be79-590d-42ca-a376-87b22b986a83
+
 ![финал_презентация (1)_page-0001](https://github.com/OSAndreev/RZD_RecSys/assets/146976873/c5f8803a-72ff-44ac-abc6-15c46a33ce1b)
 ![финал_презентация (1)_page-0002](https://github.com/OSAndreev/RZD_RecSys/assets/146976873/53eaa82f-514c-4c49-b96d-353734aaa2dd)
 ![финал_презентация (1)_page-0003](https://github.com/OSAndreev/RZD_RecSys/assets/146976873/f253b63c-4902-40b4-9327-2df64d4f9f0f)
